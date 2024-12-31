@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { plainToInstance } from 'class-transformer'
-import { CreateUserDto, UpdateUserDto, UserResponseDto } from '../dto'
+import { CreateUserDto, UpdateUserDto, UserResponseDto, PaginationDto } from '../dto'
 
 /**
  * 用户服务
@@ -27,10 +27,27 @@ export class UserService {
    * 获取所有用户
    * @returns 用户列表
    */
-  async findAll() {
-    return this.prisma.user.findMany({
+  async findAll(paginationDto: PaginationDto) {
+    const { page, size } = paginationDto
+    // 查询数据列表
+    const list = await this.prisma.user.findMany({
+      skip: (page - 1) * size, // 跳过的记录数
+      take: size, // 查询记录数
       where: { isDeleted: false } // 排除已软删除的用户
     })
+    // 查询总记录数
+    const total = await this.prisma.user.count()
+
+    return {
+      list, // 数据列表
+      total, // 总记录数
+      page, // 当前页码
+      size, // 每页记录数
+    }
+
+    // return this.prisma.user.findMany({
+    //   where: { isDeleted: false } // 排除已软删除的用户
+    // })
   }
 
   /**
@@ -62,9 +79,14 @@ export class UserService {
    * @returns 删除成功的信息
    */
   async remove(id: number) {
-    return this.prisma.user.update({
-      where: { id },
-      data: { isDeleted: true, deletedAt: new Date() } // 标记为软删除
-    })
+    try{
+      await this.prisma.user.update({
+        where: { id },
+        data: { isDeleted: true, deletedAt: new Date() } // 标记为软删除
+      })
+      return true
+    }catch (error) {
+      return false
+    }
   }
 }
