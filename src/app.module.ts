@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
+import { UserModule } from './module/user.module'
+import { RouterModule } from '@nestjs/core'
+import { routes } from './routes'
+import { PrismaModule } from './module/prisma.module'
 
-/**
- * 根模块，注册控制器和服务
- */
 @Module({
-  imports: [], // 可以在此引入其他模块
-  controllers: [AppController], // 注册根控制器
-  providers: [AppService],      // 注册根服务
+  imports: [
+    RouterModule.register(routes), // 注册路由配置
+    UserModule,
+    PrismaModule
+  ],
 })
 export class AppModule {}
