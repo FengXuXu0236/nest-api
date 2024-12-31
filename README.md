@@ -1,48 +1,109 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# 项目名称
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 项目介绍
+本项目基于 NestJS 框架构建，提供模块化、可扩展的后端架构，集成了 Prisma 数据库管理工具，并遵循统一的代码风格和目录结构。
 
-## Description
+## 技术栈说明
+本项目基于 Node.js 和 NestJS 开发，采用模块化和分层架构设计，集成了现代化的工具和技术栈，确保项目高效、可扩展。
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 核心技术
+| 技术/工具             | 版本范围或链接		    | 作用                                         |
+|:------------------|:-------------|:-------------------------------------------|
+| Node.js           | 	`>=16.0.0 ` | 	项目运行环境，提供高性能非阻塞 I/O。                      |
+| NestJS            | 	`^10.0.0 `  | 	构建高性能、可维护性强的后端应用程序的框架。                    |
+| TypeScript        | 	`^5.0.0 `   | 	提供类型支持的 JavaScript 超集，用于静态类型检查和更高的代码可维护性。 |
+| Prisma            | 	`^6.0.0`    | 	强大的 ORM 工具，用于数据库模型管理和查询。                  |
+| ESLint            | 	`^8.0.0`    | 	JavaScript/TypeScript 代码检查工具，确保代码风格和质量一致。 |
+| Prettier          | 	`^3.0.0`    | 	代码格式化工具，保持代码一致的格式。                        |
+| class-validator   | 	`^1.6.0 `   | 	用于验证 DTO（数据传输对象）的数据有效性。                   |
+| class-transformer | 	`^1.5.0`    | 	用于转换和映射 DTO 的输入和输出数据。                     |
 
-## Project setup
+## 数据库技术
+| 技术/工具       | 版本范围或链接		                                         | 作用                                    |
+|:------------|:--------------------------------------------------|:--------------------------------------|
+| MySQL       | 	`>=5.7` 或 `>=8.0`                                | 	关系型数据库，用于持久化存储业务数据。                  |
+| Prisma ORM	 | 	      [Prisma 官方文档	](https://prisma.org.cn/docs) | 	数据库建模和查询工具，支持多种数据库，结合 TypeScript 使用。 |
+
+## 开发工具
+| 技术/工具             | 版本范围或链接		            | 作用                            |
+|:------------------|:---------------------|:------------------------------|
+| Nest CLI          | 	`^10.0.0 `          | 	快速创建和管理 NestJS 项目。           |
+| Prisma CLI        | 	`^6.0.0 `           | 	提供迁移、模型生成等功能，管理数据库。          |
+| ESLint + Prettier | 	`^8.0.0` 和 `^3.0.0` | 	提供统一的代码检查和格式化工具，保证团队代码风格一致性。 |
+
+
+## 项目架构特色
+1. 模块化架构：
+   - 使用 NestJS 的模块系统，按功能划分模块（如用户模块、文章模块），便于维护和扩展。
+<br/><br/>
+2. Prisma 数据管理：
+   - 使用 merge-prisma.js 脚本实现模块化的 Prisma 模型管理，并支持自动合并模型到 schema.prisma。
+<br/><br/>
+3. 代码质量保障：
+   - 使用 ESLint 和 Prettier 确保代码风格一致性，减少代码质量问题。
+   - 结合 TypeScript 静态类型检查，减少运行时错误。
+<br/><br/>
+4. 高效开发体验
+   - 提供脚本支持（如自动生成模块结构、管理 Prisma 模型），提升开发效率。
+   - 集成 Swagger 自动化 API 文档生成工具。
+<br/><br/>
+
+## 未来可扩展技术栈
+
+- Redis：
+  - 用于缓存和提升数据访问性能。 
+<br/><br/>
+- WebSocket：
+  - 实现实时通信功能。
+<br/><br/>
+- GraphQL：
+  - 替代 REST 的 API 交互方式，提供更灵活的数据查询和操作。
+<br/><br/>
+---
+
+## 项目安装
 
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+## 项目运行命令说明
 
 ```bash
-# development
-$ npm run start
 
-# watch mode
-$ npm run start:dev
+# 执行 merge-prisma.js 脚本，将 src/prisma 目录下的模型文件合并到 prisma/schema.prisma 中
+npm run merge-prisma
 
-# production mode
-$ npm run start:prod
+# 依次执行以下操作：
+# 1. 合并 Prisma 模型文件到 schema.prisma
+# 2. 执行 Prisma 数据库迁移
+# 3. 生成 Prisma Client。
+npm run migrate
+
+# 根据 schema.prisma 文件生成 Prisma Client，用于与数据库交互。
+npm run generate
+
+# 启动 Prisma Studio，提供一个图形化界面，方便浏览和管理数据库内容。
+npm run studio
+
+# 使用 NestJS 构建项目，生成编译后的文件到 dist/ 目录。
+npm run build
+
+# 使用 Prettier 格式化代码，包括 src 目录下的所有 .ts 文件。
+npm run format
+
+# 启动 NestJS 应用程序（用于生产环境）。
+npm run start
+
+# 以开发模式启动 NestJS 应用程序，支持文件变更自动重启。
+npm run start:dev
+
+# 以调试模式启动 NestJS 应用程序，支持文件变更自动重启，并启用调试工具。
+npm run start:debug
+
+# 启动已编译的 NestJS 应用程序，运行 dist/main.js 文件（用于生产环境）。
+npm run start:prod
 ```
 
 ### 目录结构: 
@@ -87,4 +148,29 @@ tsconfig.build.json             # TypeScript 构建配置
 tsconfig.json                   # TypeScript 编译配置
 
 ```
+
+## 分支管理说明
+
+本项目采用 **两分支管理策略**：
+
+### 1. `init-template` 分支
+- **用途**：保存项目的初始化模板代码。
+- **内容**：包含项目的基本结构和必要的配置文件（如 ESLint、Prettier、Prisma 等）。
+- **特点**：代码保持干净、未经过业务开发，可以随时切换到此分支获取初始化项目作为模板。
+- **操作示例**：
+  ```bash
+  # 切换到 init-template 分支
+  git checkout init-template
+  ```
+
+### 2. `master` 分支
+- **用途**：作为项目的主分支。
+- **内容**：所有功能开发、代码合并和部署均基于此分支。
+- **特点**：代码会随着功能开发不断更新，最终所有开发完成后在此分支上进行发布。
+- **操作示例**：
+  ```bash
+  # 切换到 master 分支
+  git checkout master
+  ```
+  
 
