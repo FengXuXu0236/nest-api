@@ -8,7 +8,7 @@ import { } from '../dto'
  * - 处理与用户相关的 HTTP 请求
  * - 转发请求到用户服务
  */
-@Controller('users') // 路由前缀
+@Controller() // 路由前缀
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

@@ -4,6 +4,10 @@ import { UserService } from '../service/user.service'
 import { UserRepository } from '../repositories/user.repository'
 import { PrismaService } from '../prisma/prisma.service'
 
+/**
+ * 用户模块
+ * 组织用户相关的控制器、服务和依赖
+ */
 @Module({
   controllers: [UserController],
   providers: [UserService, UserRepository, PrismaService], // 注册 PrismaService
