@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Query, Param, Patch, Delete, HttpException, HttpStatus  } from '@nestjs/common'
 import { UserService } from '../service/user.service'
-import { CreateUserDto, UpdateUserDto } from '../dto'
-import { } from '../dto'
-
+import { CreateUserDto, UpdateUserDto, PaginationDto } from '../dto'
+import { errorResponse } from '../utils/response'
+import { HttpCode } from '../constants/http-codes'
 /**
  * 用户控制器
  * - 处理与用户相关的 HTTP 请求
@@ -26,9 +26,14 @@ export class UserController {
    * 获取所有用户
    * @returns 用户列表
    */
-  @Get()
-  findAll() {
-    return this.userService.findAll()
+  @Get('list')
+  findAll(@Query() paginationDto: PaginationDto) {
+    try{
+      return this.userService.findAll(paginationDto)
+    }catch (error){
+      throw new HttpException('', HttpStatus.NOT_FOUND)
+    }
+    // return this.userService.findAll()
   }
 
   /**
@@ -37,8 +42,12 @@ export class UserController {
    * @returns 用户详情
    */
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id)
+  async findOne(@Param('id') id: string) {
+    try{
+      return this.userService.findOne(+id)
+    }catch (error){
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    }
   }
 
   /**
@@ -58,7 +67,23 @@ export class UserController {
    * @returns 删除成功或失败的信息
    */
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id)
+  async remove(@Param('id') id: string) {
+    const success = await  this.userService.remove(+id)
+
+    if (!success) {
+      return {
+        isCustom: true,
+        data: errorResponse({ message: '删除失败', code: HttpCode.NO_CONTENT } )
+      }
+    }
+
+    return {
+      isCustom: true,
+      data: {
+        code: HttpCode.SUCCESS,
+        message: '删除成功',
+        data: {}
+      }
+    }
   }
 }
