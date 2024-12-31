@@ -1,0 +1,38 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Merged Schemas
+
+
+// =============================================
+// From article.prisma
+// =============================================
+model Article {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+
+// =============================================
+// From user.prisma
+// =============================================
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  articles  Article[] // 关系字段：一个用户有多篇文章
+  createdAt DateTime @default(now())
+}
+
