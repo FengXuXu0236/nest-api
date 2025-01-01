@@ -8,6 +8,7 @@ import { UserService } from '../service/user.service'
 import { PrismaService } from '../prisma/prisma.service'
 import { RoleModule } from './role.module';
 import { PermissionModule } from './permission.module';
+import { MenuModule } from './menu.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PermissionModule } from './permission.module';
     }),
     RoleModule,
     PermissionModule,
+    MenuModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, PrismaService, JwtStrategy],
