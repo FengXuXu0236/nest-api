@@ -99,7 +99,8 @@ model RolePermission {
   role       Role       @relation(fields: [roleId], references: [id])         // 角色关联
   permission Permission @relation(fields: [permissionId], references: [id])   // 权限关联
 
-  @@unique([roleId, permissionId])                                            // 复合唯一约束，防止重复关联
+  @@unique([roleId, permissionId])
+  @@map("role_permission") // 使用原始表名// 复合唯一约束，防止重复关联
 }
 
 
@@ -117,7 +118,7 @@ model User {
   password    String    @default("")                    // 加密的密码
   secretKey   String    @default("")                    // 用户秘钥
   avatarUrl   String    @default("")                    // 用户头像
-  roles       UserRole[]                                // 用户的角色关联关系
+  roles       String    @default("")                    // 用户的角色关联关系
   isActive    Boolean    @default(false)                // 是否激活
   isDeleted   Boolean    @default(false)                // 是否删除
   isDisabled  Boolean    @default(false)                // 是否禁用
@@ -133,6 +134,8 @@ model User {
   disabledAt  DateTime?                                 // 禁用时间
   frozenAt    DateTime?                                 // 冻结时间
   specialAt   DateTime?                                 // 标记特殊时间
+
+  userRoles UserRole[]  // 添加反向关系字段，关联 UserRole
 
   @@index([phoneNumber])    // 索引 isActive 字段
   @@index([isActive])    // 索引 isActive 字段
@@ -157,6 +160,7 @@ model UserRole {
   user User @relation(fields: [userId], references: [id]) // 用户关联
   role Role @relation(fields: [roleId], references: [id]) // 角色关联
 
-  @@unique([userId, roleId])                              // 复合唯一约束，防止重复关联
+  @@unique([userId, roleId])
+  @@map("user_role") // 使用原始表名// 复合唯一约束，防止重复关联
 }
 

@@ -9,7 +9,7 @@ model User {
   password    String    @default("")                    // 加密的密码
   secretKey   String    @default("")                    // 用户秘钥
   avatarUrl   String    @default("")                    // 用户头像
-  roles       UserRole[]                                // 用户的角色关联关系
+  roles       String    @default("")                    // 用户的角色关联关系
   isActive    Boolean    @default(false)                // 是否激活
   isDeleted   Boolean    @default(false)                // 是否删除
   isDisabled  Boolean    @default(false)                // 是否禁用
@@ -25,6 +25,8 @@ model User {
   disabledAt  DateTime?                                 // 禁用时间
   frozenAt    DateTime?                                 // 冻结时间
   specialAt   DateTime?                                 // 标记特殊时间
+
+  userRoles UserRole[]  // 添加反向关系字段，关联 UserRole
 
   @@index([phoneNumber])    // 索引 isActive 字段
   @@index([isActive])    // 索引 isActive 字段

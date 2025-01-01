@@ -8,5 +8,6 @@ model UserRole {
   user User @relation(fields: [userId], references: [id]) // 用户关联
   role Role @relation(fields: [roleId], references: [id]) // 角色关联
 
-  @@unique([userId, roleId])                              // 复合唯一约束，防止重复关联
+  @@unique([userId, roleId])
+  @@map("user_role") // 使用原始表名// 复合唯一约束，防止重复关联
 }

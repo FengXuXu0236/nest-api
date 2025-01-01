@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 
-/**
- * Prisma 服务
- * - 封装 Prisma Client，用于数据库交互
- */
 @Injectable()
-export class PrismaService extends PrismaClient {
-  constructor() {
-    super()
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
+  async onModuleInit() {
+    await this.$connect()
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect()
   }
 }
