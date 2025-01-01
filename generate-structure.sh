@@ -17,7 +17,6 @@
 # │   │   └── <module>-response.dto.ts        # 响应的 DTO
 # ├── interfaces/<module>.interface.ts        # 接口：定义模块实体的通用接口
 # ├── types/<module>.types.ts                 # 类型：定义模块相关类型（如 Payload 和 Response）
-# ├── prisma/<module>.prisma                  # Prisma 模型：定义数据库表结构
 # ├── repositories/<module>.repository.ts     # 仓储：封装数据库查询逻辑
 # ============================================
 # 例如:
@@ -36,7 +35,6 @@
 # │   │   └── article-response.dto.ts        # 响应的 DTO
 # ├── interfaces/article.interface.ts        # 接口：定义模块实体的通用接口
 # ├── types/article.types.ts                 # 类型：定义模块相关类型（如 Payload 和 Response）
-# ├── prisma/article.prisma                  # Prisma 模型：定义数据库表结构
 # ├── repositories/article.repository.ts     # 仓储：封装数据库查询逻辑
 #
 # 文件内容示例：
@@ -101,14 +99,6 @@
 #      id: number;
 #      name?: string;
 #    };
-#
-# 7. prisma/article.prisma
-#    model Article {
-#      id        Int      @id @default(autoincrement())
-#      name      String
-#      createdAt DateTime @default(now())
-#      updatedAt DateTime @default(now()) @updatedAt
-#    }
 #
 # 8. repositories/article.repository.ts
 #    import { Injectable } from '@nestjs/common';
@@ -245,15 +235,6 @@ export type Update${MODULE_NAME^}Payload = {
   id: number;
   name?: string;
 };" > $TYPES_FILE
-
-# 创建 Prisma 模型文件
-PRISMA_FILE="$BASE_PATH/prisma/${MODULE_NAME}.prisma"
-echo "model ${MODULE_NAME^} {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-}" > $PRISMA_FILE
 
 # 创建 Repository 文件
 REPOSITORY_FILE="$BASE_PATH/repositories/${MODULE_NAME}.repository.ts"

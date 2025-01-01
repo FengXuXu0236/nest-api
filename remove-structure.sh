@@ -14,7 +14,6 @@
 # ├── module/<module>.module.ts
 # ├── interfaces/<module>.interface.ts
 # ├── types/<module>.types.ts
-# ├── prisma/<module>.prisma
 # ├── repositories/<module>.repository.ts
 # ============================================
 
@@ -80,15 +79,6 @@ if [ -f "$TYPES_FILE" ]; then
   rm -f "$TYPES_FILE"
 else
   echo "No types file found for module: $MODULE_NAME"
-fi
-
-# 删除 Prisma 模型文件
-PRISMA_FILE="$BASE_PATH/prisma/${MODULE_NAME}.prisma"
-if [ -f "$PRISMA_FILE" ]; then
-  echo "Removing Prisma file: $PRISMA_FILE"
-  rm -f "$PRISMA_FILE"
-else
-  echo "No Prisma file found for module: $MODULE_NAME"
 fi
 
 # 删除仓储文件

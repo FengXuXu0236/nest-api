@@ -6,6 +6,7 @@ import { AuthService } from '../service/auth.service'
 import { AuthController } from '../controllers/auth.controller'
 import { UserService } from '../service/user.service'
 import { PrismaService } from '../prisma/prisma.service'
+import { RoleModule } from './role.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PrismaService } from '../prisma/prisma.service'
       secret: process.env.JWT_SECRET || 'defaultSecretKey', // JWT 密钥
       signOptions: { expiresIn: '1h' }, // Token 过期时间
     }),
+    RoleModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, PrismaService, JwtStrategy],

@@ -4,6 +4,8 @@ import { AuthModule } from './module/auth.module'
 import { RouterModule } from '@nestjs/core'
 import { routes } from './routes'
 import { PrismaModule } from './module/prisma.module'
+import { RoleController } from './controllers/role.controller';
+import { RoleService } from './service/role.service';
 
 @Module({
   imports: [
@@ -12,5 +14,7 @@ import { PrismaModule } from './module/prisma.module'
     AuthModule,
     PrismaModule
   ],
+  controllers: [RoleController],
+  providers: [RoleService],
 })
 export class AppModule {}
