@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable, UnauthorizedException, ConflictException  } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { UserService } from './user.service'
 import * as bcrypt from 'bcrypt'
-import { LoginDto } from '../dto'
+import { LoginDto, RegisterDto } from '../dto'
 
 @Injectable()
 export class AuthService {
@@ -40,5 +40,36 @@ export class AuthService {
       email: user.email,
       id: user.id,
     }
+  }
+
+  /**
+   * 用户注册
+   * @param registerDto 注册参数
+   * @returns 注册成功的用户信息
+   */
+  async register(registerDto: RegisterDto) {
+    const { username, password, email } = registerDto
+
+    // 检查用户名或邮箱是否已存在
+    const existingUser = await this.userService.findByUsername(username)
+    const existingEmail = await this.userService.findByEmail(email)
+
+    if (existingUser) {
+      throw new ConflictException('Username already exists')
+    }
+
+    if (existingEmail) {
+      throw new ConflictException('Email already exists')
+    }
+
+    // 加密密码
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // 创建用户
+    return this.userService.create({
+      username,
+      password: hashedPassword,
+      email,
+    })
   }
 }

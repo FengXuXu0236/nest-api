@@ -100,4 +100,13 @@ export class UserService {
       where: { email, isDeleted: false },
     })
   }
+
+  /**
+   * 根据用户名查找用户
+   * @param username 用户名
+   * @returns 用户信息
+   */
+  async findByUsername(username: string) {
+    return this.prisma.user.findUnique({ where: { username, isDeleted: false } })
+  }
 }
