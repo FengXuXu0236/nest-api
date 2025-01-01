@@ -11,11 +11,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse()
     const request = ctx.getRequest()
-
     // 默认错误信息
     let code = HttpStatus.INTERNAL_SERVER_ERROR // 默认状态码 500
     let message = 'Internal server error' // 默认错误消息
 
+    console.error('Exception caught:', {
+      context: exception, // 打印完整上下文
+    })
     // 如果是 HttpException 类型，提取具体状态码和消息
     if (exception instanceof HttpException) {
       code = exception.getStatus()

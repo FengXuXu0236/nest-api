@@ -56,7 +56,23 @@ export class UserService {
    * @returns 用户详情
    */
   async findOne(id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id } })
+    const where = { id }
+    const select = {
+      id: true,
+      username: true,
+      nickname: true,
+      email: true,
+      fullName: true,
+      phoneNumber: true,
+      idCard: true,
+      avatarUrl: true,
+      role: true,
+      lastLogin: true,
+      createdAt: true,
+      updatedAt: true,
+      activatedAt: true,
+    }
+    const user = await this.prisma.user.findUnique({ where, select })
     return plainToInstance(UserResponseDto, user)
   }
 

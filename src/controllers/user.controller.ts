@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Query, Param, Patch, Delete, HttpException, HttpStatus  } from '@nestjs/common'
+import { Controller, Req, Get, Post, Body, Query, Param, Patch, Delete, UseGuards, HttpException, HttpStatus  } from '@nestjs/common'
 import { UserService } from '../service/user.service'
 import { CreateUserDto, UpdateUserDto, PaginationDto } from '../dto'
 import { errorResponse } from '../utils/response'
 import { HttpCode } from '../constants/http-codes'
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'
+import * as bcrypt from 'bcrypt'
 /**
  * 用户控制器
  * - 处理与用户相关的 HTTP 请求
@@ -18,7 +20,8 @@ export class UserController {
    * @returns 创建的用户数据
    */
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
+    createUserDto.password = await bcrypt.hash(createUserDto.password, 10)
     return this.userService.create(createUserDto)
   }
 
@@ -41,7 +44,7 @@ export class UserController {
    * @param id 用户 ID
    * @returns 用户详情
    */
-  @Get(':id')
+  @Get(':id(\\d+)')
   async findOne(@Param('id') id: string) {
     try{
       return this.userService.findOne(+id)
@@ -85,5 +88,17 @@ export class UserController {
         data: {}
       }
     }
+  }
+
+  /**
+   * 获取用户信息
+   * - 需要提供有效的 JWT Token
+   * @param req 请求对象，包含用户信息
+   * @returns 用户信息
+   */
+  @Get('userinfo')
+  @UseGuards(JwtAuthGuard) // 使用 JWT 守卫保护此路由
+  async getUserInfo(@Req() req) {
+    return await this.userService.findOne(+req.user.userId)
   }
 }

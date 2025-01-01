@@ -8,6 +8,14 @@ import { ResponseInterceptor } from './interceptors/response.interceptor'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  // 启用 CORS 支持
+  app.enableCors({
+    origin: '*', // 允许所有来源访问
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // 允许的 HTTP 方法
+    allowedHeaders: 'Content-Type, Accept, Authorization', // 允许的请求头
+    credentials: true, // 允许发送 Cookie
+  })
+
   // 注册全局异常过滤器
   app.useGlobalFilters(new HttpExceptionFilter())
   // 注册全局响应拦截器

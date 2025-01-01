@@ -36,7 +36,7 @@ export class AuthService {
     const token = this.jwtService.sign(payload)
 
     return {
-      accessToken: token,
+      token,
       email: user.email,
       id: user.id,
     }
@@ -49,11 +49,9 @@ export class AuthService {
    */
   async register(registerDto: RegisterDto) {
     const { username, password, email } = registerDto
-
     // 检查用户名或邮箱是否已存在
     const existingUser = await this.userService.findByUsername(username)
     const existingEmail = await this.userService.findByEmail(email)
-
     if (existingUser) {
       throw new ConflictException('Username already exists')
     }
@@ -69,7 +67,7 @@ export class AuthService {
     return this.userService.create({
       username,
       password: hashedPassword,
-      email,
+      email
     })
   }
 }

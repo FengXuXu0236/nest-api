@@ -15,33 +15,34 @@ datasource db {
 // From user.prisma
 // =============================================
 model User {
-  id          Int       @id @default(autoincrement())
-  username    String    @unique @default("")
-  nickname    String    @default("")
-  email       String    @unique @default("")
-  fullName    String    @default("")
-  phoneNumber String    @unique @default("")
-  idCard      String    @default("")
-  password    String    @default("")
-  secretKey   String    @default("")
-  avatarUrl   String    @default("")
-  role        Role       @default(USER)
-  isActive    Boolean    @default(false)
-  isDeleted   Boolean    @default(false)
-  isDisabled  Boolean    @default(false)
-  isFrozen    Boolean    @default(false)
-  isSpecial   Boolean    @default(false)
-  isMuted     Boolean    @default(false)
-  lastLogin   DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  activatedAt DateTime?
-  deletedAt   DateTime?
-  mutedAt     DateTime?
-  disabledAt  DateTime?
-  frozenAt    DateTime?
-  specialAt   DateTime?
+  id          Int       @id @default(autoincrement())   // 用户唯一标识
+  username    String    @unique @default("")            // 用户名
+  nickname    String    @default("")                    // 用户昵称
+  email       String    @unique @default("")            // 邮箱地址
+  fullName    String    @default("")                    // 用户真实姓名
+  phoneNumber String    @default("")                    // 手机号码
+  idCard      String    @default("")                    // 身份证号码
+  password    String    @default("")                    // 加密的密码
+  secretKey   String    @default("")                    // 用户秘钥
+  avatarUrl   String    @default("")                    // 用户头像
+  role        Role       @default(USER)                 // 用户角色
+  isActive    Boolean    @default(false)                // 是否激活
+  isDeleted   Boolean    @default(false)                // 是否删除
+  isDisabled  Boolean    @default(false)                // 是否禁用
+  isFrozen    Boolean    @default(false)                // 是否冻结
+  isSpecial   Boolean    @default(false)                // 是否标记为特殊用户
+  isMuted     Boolean    @default(false)                // 是否禁言
+  lastLogin   DateTime?                                 // 最后登录时间
+  createdAt   DateTime   @default(now())                // 创建时间
+  updatedAt   DateTime   @updatedAt                     // 最新修改时间
+  activatedAt DateTime?                                 // 激活时间
+  deletedAt   DateTime?                                 // 删除时间
+  mutedAt     DateTime?                                 // 禁言时间
+  disabledAt  DateTime?                                 // 禁用时间
+  frozenAt    DateTime?                                 // 冻结时间
+  specialAt   DateTime?                                 // 标记特殊时间
 
+  @@index([phoneNumber])    // 索引 isActive 字段
   @@index([isActive])    // 索引 isActive 字段
   @@index([isDeleted])   // 索引 isDeleted 字段
   @@index([isDisabled])  // 索引 isDisabled 字段

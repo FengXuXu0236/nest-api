@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEmail } from 'class-validator'
+import { IsString, IsNotEmpty, IsEmail, IsOptional, Matches } from 'class-validator'
 
 /**
  * 注册数据传输对象
