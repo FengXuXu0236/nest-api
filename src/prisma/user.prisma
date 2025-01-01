@@ -9,7 +9,7 @@ model User {
   password    String    @default("")                    // 加密的密码
   secretKey   String    @default("")                    // 用户秘钥
   avatarUrl   String    @default("")                    // 用户头像
-  role        Role       @default(USER)                 // 用户角色
+  roles       UserRole[]                                // 用户的角色关联关系
   isActive    Boolean    @default(false)                // 是否激活
   isDeleted   Boolean    @default(false)                // 是否删除
   isDisabled  Boolean    @default(false)                // 是否禁用
@@ -33,10 +33,4 @@ model User {
   @@index([isFrozen])    // 索引 isFrozen 字段
   @@index([isSpecial])   // 索引 isSpecial 字段
   @@index([isMuted])     // 索引 isMuted 字段
-}
-
-enum Role {
-  ADMIN
-  USER
-  MODERATOR
 }

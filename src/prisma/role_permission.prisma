@@ -1,0 +1,12 @@
+model RolePermission {
+  id           Int       @id @default(autoincrement())                        // 角色-权限关联表唯一标识
+  roleId       Int                                                            // 角色 ID
+  permissionId Int                                                            // 权限 ID
+  createdAt    DateTime  @default(now())                                      // 关联创建时间
+  updatedAt    DateTime  @updatedAt                                           // 关联更新时间
+
+  role       Role       @relation(fields: [roleId], references: [id])         // 角色关联
+  permission Permission @relation(fields: [permissionId], references: [id])   // 权限关联
+
+  @@unique([roleId, permissionId])                                            // 复合唯一约束，防止重复关联
+}

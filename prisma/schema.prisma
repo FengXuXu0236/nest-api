@@ -12,6 +12,98 @@ datasource db {
 
 
 // =============================================
+// From enums.prisma
+// =============================================
+enum PermissionType {
+  MENU   // 菜单权限
+  BUTTON // 按钮权限
+  API    // API 权限
+  COLUMN // 表格列权限
+}
+
+
+// =============================================
+// From menu.prisma
+// =============================================
+model Menu {
+  id          Int       @id @default(autoincrement())   // 菜单唯一标识
+  name        String    @unique                         // 菜单名称，唯一
+  description String?                                   // 菜单描述
+  path        String    @unique                         // 菜单对应的路由路径
+  parentId    Int?                                      // 父菜单 ID，支持菜单层级
+  isDisabled  Boolean    @default(false)                // 是否禁用
+  isDeleted   Boolean    @default(false)                // 是否删除
+  disabledAt  DateTime?                                 // 菜单禁用时间
+  createdAt   DateTime   @default(now())                // 菜单创建时间
+  updatedAt   DateTime   @updatedAt                     // 菜单更新时间
+  deletedAt   DateTime?                                 // 菜单删除时间
+
+  @@index([isDeleted])                                  // 索引 isDeleted 字段
+  @@index([isDisabled])                                 // 索引 isDisabled 字段
+}
+
+
+// =============================================
+// From permission.prisma
+// =============================================
+model Permission {
+  id          Int       @id @default(autoincrement())   // 权限唯一标识
+  name        String    @unique                         // 权限名称，唯一
+  description String?                                   // 权限描述
+  type        PermissionType                            // 权限类型（菜单/按钮/API/列）
+  resource    String                                    // 资源路径（如 API 路径或路由）
+  isDisabled  Boolean    @default(false)                // 是否禁用
+  isDeleted   Boolean    @default(false)                // 是否删除
+  disabledAt  DateTime?                                 // 权限禁用时间
+  createdAt   DateTime   @default(now())                // 权限创建时间
+  updatedAt   DateTime   @updatedAt                     // 权限更新时间
+  deletedAt   DateTime?                                 // 权限删除时间
+  roles       RolePermission[]                          // 权限的角色关联关系
+
+  @@index([isDeleted])                                  // 索引 isDeleted 字段
+  @@index([isDisabled])                                 // 索引 isDisabled 字段
+}
+
+
+// =============================================
+// From role.prisma
+// =============================================
+model Role {
+  id          Int          @id @default(autoincrement())  // 角色唯一标识
+  name        String       @unique                        // 角色名称，唯一
+  description String?                                     // 角色描述
+  isDisabled  Boolean      @default(false)                // 是否禁用
+  isDeleted   Boolean      @default(false)                // 是否删除
+  disabledAt  DateTime?                                   // 角色禁用时间
+  createdAt   DateTime     @default(now())                // 角色创建时间
+  updatedAt   DateTime     @updatedAt                     // 角色更新时间
+  deletedAt   DateTime?                                   // 角色删除时间
+  permissions RolePermission[]                            // 角色的权限关联关系
+  users       UserRole[]                                  // 角色的用户关联关系
+
+  @@index([isDeleted])                                    // 索引 isDeleted 字段
+  @@index([isDisabled])                                   // 索引 isDisabled 字段
+}
+
+
+// =============================================
+// From role_permission.prisma
+// =============================================
+model RolePermission {
+  id           Int       @id @default(autoincrement())                        // 角色-权限关联表唯一标识
+  roleId       Int                                                            // 角色 ID
+  permissionId Int                                                            // 权限 ID
+  createdAt    DateTime  @default(now())                                      // 关联创建时间
+  updatedAt    DateTime  @updatedAt                                           // 关联更新时间
+
+  role       Role       @relation(fields: [roleId], references: [id])         // 角色关联
+  permission Permission @relation(fields: [permissionId], references: [id])   // 权限关联
+
+  @@unique([roleId, permissionId])                                            // 复合唯一约束，防止重复关联
+}
+
+
+// =============================================
 // From user.prisma
 // =============================================
 model User {
@@ -25,7 +117,7 @@ model User {
   password    String    @default("")                    // 加密的密码
   secretKey   String    @default("")                    // 用户秘钥
   avatarUrl   String    @default("")                    // 用户头像
-  role        Role       @default(USER)                 // 用户角色
+  roles       UserRole[]                                // 用户的角色关联关系
   isActive    Boolean    @default(false)                // 是否激活
   isDeleted   Boolean    @default(false)                // 是否删除
   isDisabled  Boolean    @default(false)                // 是否禁用
@@ -51,9 +143,20 @@ model User {
   @@index([isMuted])     // 索引 isMuted 字段
 }
 
-enum Role {
-  ADMIN
-  USER
-  MODERATOR
+
+// =============================================
+// From user_role.prisma
+// =============================================
+model UserRole {
+  id        Int       @id @default(autoincrement())       // 用户-角色关联表唯一标识
+  userId    Int                                           // 用户 ID
+  roleId    Int                                           // 角色 ID
+  createdAt DateTime  @default(now())                     // 关联创建时间
+  updatedAt DateTime  @updatedAt                          // 关联更新时间
+
+  user User @relation(fields: [userId], references: [id]) // 用户关联
+  role Role @relation(fields: [roleId], references: [id]) // 角色关联
+
+  @@unique([userId, roleId])                              // 复合唯一约束，防止重复关联
 }
 

@@ -1,0 +1,16 @@
+model Role {
+  id          Int          @id @default(autoincrement())  // 角色唯一标识
+  name        String       @unique                        // 角色名称，唯一
+  description String?                                     // 角色描述
+  isDisabled  Boolean      @default(false)                // 是否禁用
+  isDeleted   Boolean      @default(false)                // 是否删除
+  disabledAt  DateTime?                                   // 角色禁用时间
+  createdAt   DateTime     @default(now())                // 角色创建时间
+  updatedAt   DateTime     @updatedAt                     // 角色更新时间
+  deletedAt   DateTime?                                   // 角色删除时间
+  permissions RolePermission[]                            // 角色的权限关联关系
+  users       UserRole[]                                  // 角色的用户关联关系
+
+  @@index([isDeleted])                                    // 索引 isDeleted 字段
+  @@index([isDisabled])                                   // 索引 isDisabled 字段
+}

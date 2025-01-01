@@ -1,0 +1,6 @@
+enum PermissionType {
+  MENU   // 菜单权限
+  BUTTON // 按钮权限
+  API    // API 权限
+  COLUMN // 表格列权限
+}

@@ -1,0 +1,12 @@
+model UserRole {
+  id        Int       @id @default(autoincrement())       // 用户-角色关联表唯一标识
+  userId    Int                                           // 用户 ID
+  roleId    Int                                           // 角色 ID
+  createdAt DateTime  @default(now())                     // 关联创建时间
+  updatedAt DateTime  @updatedAt                          // 关联更新时间
+
+  user User @relation(fields: [userId], references: [id]) // 用户关联
+  role Role @relation(fields: [roleId], references: [id]) // 角色关联
+
+  @@unique([userId, roleId])                              // 复合唯一约束，防止重复关联
+}
