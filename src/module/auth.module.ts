@@ -7,6 +7,7 @@ import { AuthController } from '../controllers/auth.controller'
 import { UserService } from '../service/user.service'
 import { PrismaService } from '../prisma/prisma.service'
 import { RoleModule } from './role.module';
+import { PermissionModule } from './permission.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RoleModule } from './role.module';
       signOptions: { expiresIn: '1h' }, // Token 过期时间
     }),
     RoleModule,
+    PermissionModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, PrismaService, JwtStrategy],

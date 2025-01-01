@@ -6,6 +6,8 @@ import { routes } from './routes'
 import { PrismaModule } from './module/prisma.module'
 import { RoleController } from './controllers/role.controller';
 import { RoleService } from './service/role.service';
+import { PermissionController } from './controllers/permission.controller';
+import { PermissionService } from './service/permission.service';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { RoleService } from './service/role.service';
     AuthModule,
     PrismaModule
   ],
-  controllers: [RoleController],
-  providers: [RoleService],
+  controllers: [RoleController, PermissionController],
+  providers: [RoleService, PermissionService],
 })
 export class AppModule {}
