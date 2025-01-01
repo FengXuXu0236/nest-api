@@ -89,4 +89,15 @@ export class UserService {
       return false
     }
   }
+
+  /**
+   * 根据用户名查找用户
+   * @param email 用户名
+   * @returns 用户数据
+   */
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email, isDeleted: false },
+    })
+  }
 }
