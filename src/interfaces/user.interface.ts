@@ -29,4 +29,5 @@ export interface User {
   disabledAt?: Date
   frozenAt?: Date
   specialAt?: Date
+  permissions?: string[] // 用户权限列表
 }

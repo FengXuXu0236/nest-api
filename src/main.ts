@@ -5,6 +5,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { HttpExceptionFilter } from './filters/http-exception.filter'
 import { ResponseInterceptor } from './interceptors/response.interceptor'
+import { PermissionGuard } from './guards/permission.guard'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -26,6 +27,10 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // 如果传递了 DTO 中未定义的字段则抛出错误
     transform: true, // 自动将请求参数转换为 DTO 实例
   }))
+
+  // 全局权限守卫
+  const reflector = app.get(Reflector)
+  app.useGlobalGuards(new PermissionGuard(reflector))
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 

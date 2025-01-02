@@ -1,5 +1,6 @@
 import { Controller, Req, Get, Post, Body, Query, Param, Patch, Delete, UseGuards, HttpException, HttpStatus  } from '@nestjs/common'
 import { UserService } from '../service/user.service'
+import { Permissions } from '../decorators/permissions.decorator'
 import { CreateUserDto, UpdateUserDto, PaginationDto } from '../dto'
 import { errorResponse } from '../utils/response'
 import { HttpCode } from '../constants/http-codes'
@@ -30,6 +31,7 @@ export class UserController {
    * @returns 用户列表
    */
   @Get('list')
+  @Permissions('read_users') // 指定需要的权限
   findAll(@Query() paginationDto: PaginationDto) {
     try{
       return this.userService.findAll(paginationDto)
@@ -99,6 +101,7 @@ export class UserController {
   @Get('userinfo')
   @UseGuards(JwtAuthGuard) // 使用 JWT 守卫保护此路由
   async getUserInfo(@Req() req) {
+    console.log('req.user', req.user)
     return await this.userService.findOne(+req.user.userId)
   }
 }

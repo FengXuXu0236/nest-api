@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt'
 import { UserService } from './user.service'
 import * as bcrypt from 'bcrypt'
 import { LoginDto, RegisterDto } from '../dto'
+import { PrismaService } from '../prisma/prisma.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService, // 用户服务
     private readonly jwtService: JwtService, // JWT 服务
+    private readonly prisma: PrismaService,
   ) {}
 
   /**
@@ -19,8 +21,23 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto
 
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: {
+        userRoles: {
+          include: {
+            role: {
+              include: {
+                permissions: { include: { permission: true } },
+              },
+            },
+          },
+        },
+      },
+    })
     // 使用 UserService 查找用户
-    const user = await this.userService.findByEmail(email)
+    // const user = await this.userService.findByEmail(email)
+
     if (!user) {
       throw new UnauthorizedException('Invalid email')
     }
@@ -31,8 +48,17 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password')
     }
 
+    // 整理用户的权限列表
+    const permissions = new Set<string>()
+    user.userRoles.forEach((userRole) => {
+      userRole.role.permissions.forEach((rolePermission) => {
+        permissions.add(rolePermission.permission.name)
+      })
+    })
+
     // 生成 JWT
-    const payload = { sub: user.id, email: user.email }
+    // const payload = { sub: user.id, email: user.email }
+    const payload = { sub: user }
     const token = this.jwtService.sign(payload)
 
     return {
