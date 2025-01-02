@@ -20,10 +20,13 @@ export class MenuService {
    * @returns 菜单树
    */
   async getMenuTree() {
+    // 从数据库中加载菜单
     const menus = await this.prisma.menu.findMany({
-      where: { isDeleted: false },
-      orderBy: { createdAt: 'asc' },
+      where: { isDeleted: false, isDisabled: false },
+      orderBy: { sort: 'asc' }, // 根据排序字段排序
     })
+
+    // 构建树形菜单
     return this.buildMenuTree(menus)
   }
 
@@ -37,22 +40,93 @@ export class MenuService {
 
     // 初始化每个菜单节点
     menus.forEach((menu) => {
-      menuMap.set(menu.id, { ...menu, children: [] })
+      menuMap.set(menu.id, {
+        path: menu.path,
+        name: menu.name,
+        meta: {
+          title: menu.name,
+          icon: menu.icon || '',
+          hidden: menu.isHidden || false,
+        },
+        component: menu.component || 'Layout',
+        children: [],
+        sort: menu.sort,
+      })
     })
 
     const tree = []
     menus.forEach((menu) => {
+      const currentNode = menuMap.get(menu.id)
       if (menu.parentId) {
         const parent = menuMap.get(menu.parentId)
         if (parent) {
-          parent.children.push(menuMap.get(menu.id))
+          parent.children.push(currentNode)
         }
       } else {
-        tree.push(menuMap.get(menu.id))
+        tree.push(currentNode)
       }
     })
 
-    return tree
+    return { list: tree }
+  }
+
+  /**
+   * 获取所有菜单（支持层级结构）
+   * @returns 菜单树
+   */
+  async getMenuTreeToList() {
+    // 从数据库中加载菜单
+    const menus = await this.prisma.menu.findMany({
+      where: { isDeleted: false },
+      orderBy: { sort: 'asc' }, // 根据排序字段排序
+    })
+
+    // 构建树形菜单
+    return this.buildMenuTreeToList(menus)
+  }
+
+  /**
+   * 构建菜单树
+   * @param menus 扁平菜单列表
+   * @returns 树形结构菜单
+   */
+  private buildMenuTreeToList(menus: Menu[]) {
+    const menuMap = new Map<number, any>()
+
+    // 初始化每个菜单节点
+    menus.forEach((menu) => {
+      menuMap.set(menu.id, {
+        id: menu.id,
+        name: menu.name,
+        description: menu.description,
+        path: menu.path,
+        title: menu.name,
+        icon: menu.icon || '',
+        component: menu.component || 'Layout',
+        sort: menu.sort,
+        parentId: menu.parentId,
+        hidden: menu.isHidden ? 1 : 0,
+        isDisabled: menu.isDisabled ? 1 : 0,
+        createdAt: menu.createdAt,
+        updatedAt: menu.updatedAt,
+        children: [],
+      })
+    })
+
+    const tree = []
+    menus.forEach((menu) => {
+      const currentNode = menuMap.get(menu.id)
+      if (menu.parentId) {
+        const parent = menuMap.get(menu.parentId)
+        if (parent) {
+          parent.children.push(currentNode)
+        }
+      } else {
+        tree.push(currentNode)
+      }
+    })
+
+    return { list: tree }
   }
 
   /**
@@ -131,5 +205,4 @@ export class MenuService {
 
     return menu.permissions.map((mp) => mp.permission)
   }
-
 }

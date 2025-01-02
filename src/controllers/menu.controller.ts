@@ -11,6 +11,8 @@ export class MenuController {
    */
   @Post()
   async create(@Body() data: Prisma.MenuCreateInput) {
+    data.isHidden = !!data.isHidden
+    data.isDisabled = !!data.isDisabled
     return this.menuService.createMenu(data)
   }
 
@@ -23,10 +25,20 @@ export class MenuController {
   }
 
   /**
+   * 获取菜单树
+   */
+  @Get('list')
+  async getList() {
+    return this.menuService.getMenuTreeToList()
+  }
+
+  /**
    * 更新菜单
    */
   @Patch(':id')
   async update(@Param('id') id: string, @Body() data: Prisma.MenuUpdateInput) {
+    data.isHidden = !!data.isHidden
+    data.isDisabled = !!data.isDisabled
     return this.menuService.updateMenu(+id, data)
   }
 
