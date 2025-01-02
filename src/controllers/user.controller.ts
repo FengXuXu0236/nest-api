@@ -101,7 +101,38 @@ export class UserController {
   @Get('userinfo')
   @UseGuards(JwtAuthGuard) // 使用 JWT 守卫保护此路由
   async getUserInfo(@Req() req) {
-    console.log('req.user', req.user)
-    return await this.userService.findOne(+req.user.userId)
+    return req.user
+    // return await this.userService.findOne(+req.user.id)
   }
+
+  /**
+   * 绑定角色到用户
+   */
+  @Post('roles/:id')
+  async assignRoles(
+    @Param('id') userId: string,
+    @Body() body: { roleIds: number[] },
+  ) {
+    return this.userService.assignRoles(+userId, body.roleIds)
+  }
+
+  /**
+   * 解绑用户的角色
+   */
+  @Post('unassignRoles/:id')
+  async unassignRoles(
+    @Param('id') userId: string,
+    @Body() body: { roleIds: number[] },
+  ) {
+    return this.userService.unassignRoles(+userId, body.roleIds)
+  }
+
+  /**
+   * 查询用户的角色
+   */
+  @Get('roles/:id')
+  async getUserRoles(@Param('id') userId: string) {
+    return this.userService.getUserRoles(+userId)
+  }
+
 }

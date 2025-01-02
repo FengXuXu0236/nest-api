@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException  } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { plainToInstance } from 'class-transformer'
 import { CreateUserDto, UpdateUserDto, UserResponseDto, PaginationDto } from '../dto'
@@ -124,5 +124,60 @@ export class UserService {
    */
   async findByUsername(username: string) {
     return this.prisma.user.findUnique({ where: { username, isDeleted: false } })
+  }
+
+  /**
+   * 绑定角色到用户
+   * @param userId 用户 ID
+   * @param roleIds 角色 ID 列表
+   * @returns 绑定结果
+   */
+  async assignRoles(userId: number, roleIds: number[]) {
+    // 检查用户是否存在
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    // 插入用户-角色关联关系
+    return this.prisma.userRole.createMany({
+      data: roleIds.map((roleId) => ({
+        userId,
+        roleId,
+      })),
+      skipDuplicates: true, // 避免重复绑定
+    })
+  }
+
+  /**
+   * 解绑用户的角色
+   * @param userId 用户 ID
+   * @param roleIds 角色 ID 列表
+   * @returns 删除结果
+   */
+  async unassignRoles(userId: number, roleIds: number[]) {
+    return this.prisma.userRole.deleteMany({
+      where: {
+        userId,
+        roleId: { in: roleIds },
+      },
+    })
+  }
+
+  /**
+   * 查询用户的角色
+   * @param userId 用户 ID
+   * @returns 用户的角色列表
+   */
+  async getUserRoles(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { userRoles: { include: { role: true } } }, // 加载角色信息
+    })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    return user.userRoles.map((userRole) => userRole.role)
   }
 }

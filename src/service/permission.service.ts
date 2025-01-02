@@ -40,7 +40,7 @@ export class PermissionService {
       total,
       page,
       size,
-      permissions,
+      list: permissions,
     }
   }
 
