@@ -90,4 +90,20 @@ export class RoleService {
       },
     })
   }
+
+  /**
+   * 查询角色的权限
+   * @param roleId 角色 ID
+   * @returns 权限列表
+   */
+  async getRolePermissions(roleId: number) {
+    // 检查角色是否存在
+    const role = await this.prisma.role.findUnique({
+      where: { id: roleId },
+      include: { permissions: { include: { permission: true } } }, // 加载权限信息
+    })
+    if (!role) throw new NotFoundException('Role not found')
+
+    return role.permissions.map((rp) => rp.permission)
+  }
 }

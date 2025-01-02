@@ -62,4 +62,12 @@ export class RoleController {
   ) {
     return this.roleService.unassignPermissions(+roleId, body.permissionIds)
   }
+
+  /**
+   * 查询角色的权限
+   */
+  @Get('permissions/:id')
+  async getRolePermissions(@Param('id') roleId: string) {
+    return this.roleService.getRolePermissions(+roleId)
+  }
 }
