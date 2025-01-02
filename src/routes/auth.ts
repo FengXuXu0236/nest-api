@@ -1,8 +1,8 @@
 import { Routes } from '@nestjs/core'
 import { AuthModule } from '../module/auth.module'
 /**
- * 用户模块路由
- * - 定义用户模块的路由路径和模块绑定
+ * 鉴权模块路由
+ * - 定义鉴权模块的路由路径和模块绑定
  */
 export const authRoutes: Routes = [
   {

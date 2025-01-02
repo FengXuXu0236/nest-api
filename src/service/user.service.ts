@@ -66,7 +66,7 @@ export class UserService {
       phoneNumber: true,
       idCard: true,
       avatarUrl: true,
-      role: true,
+      roles: true,
       lastLogin: true,
       createdAt: true,
       updatedAt: true,

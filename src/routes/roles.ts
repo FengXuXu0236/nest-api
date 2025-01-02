@@ -2,8 +2,8 @@ import { Routes } from '@nestjs/core'
 import { RoleModule } from '../module/role.module'
 
 /**
- * 用户模块路由
- * - 定义用户模块的路由路径和模块绑定
+ * 角色模块路由
+ * - 定义角色模块的路由路径和模块绑定
  */
 export const rolesRoutes: Routes = [
   {
