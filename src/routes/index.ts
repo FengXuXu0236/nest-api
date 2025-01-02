@@ -3,6 +3,7 @@ import { userRoutes } from './users'
 import { authRoutes } from './auth'
 import { rolesRoutes } from './roles'
 import { permissionRoutes } from './permissions'
+import { menuRoutes } from './menus'
 
 /**
  * 汇总所有模块的路由配置
@@ -15,6 +16,7 @@ export const routes: Routes = [
       ...authRoutes,
       ...rolesRoutes,
       ...permissionRoutes,
+      ...menuRoutes,
     ]
   },
 ]
