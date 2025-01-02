@@ -8,6 +8,6 @@ model RolePermission {
   role       Role       @relation(fields: [roleId], references: [id])         // 角色关联
   permission Permission @relation(fields: [permissionId], references: [id])   // 权限关联
 
-  @@unique([roleId, permissionId])
-  @@map("role_permission") // 使用原始表名// 复合唯一约束，防止重复关联
+  @@unique([roleId, permissionId]) // 复合唯一约束，防止重复关联
+  @@map("role_permission") // 使用原始表名
 }

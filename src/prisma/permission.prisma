@@ -11,6 +11,7 @@ model Permission {
   updatedAt   DateTime   @updatedAt                     // 权限更新时间
   deletedAt   DateTime?                                 // 权限删除时间
   roles       RolePermission[]                          // 权限的角色关联关系
+  menus       MenuPermission[]                          // 权限的菜单关联关系
 
   @@index([isDeleted])                                  // 索引 isDeleted 字段
   @@index([isDisabled])                                 // 索引 isDisabled 字段

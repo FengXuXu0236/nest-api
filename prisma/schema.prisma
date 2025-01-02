@@ -37,9 +37,28 @@ model Menu {
   createdAt   DateTime   @default(now())                // 菜单创建时间
   updatedAt   DateTime   @updatedAt                     // 菜单更新时间
   deletedAt   DateTime?                                 // 菜单删除时间
+  permissions MenuPermission[]                          // 菜单的权限关联关系
 
   @@index([isDeleted])                                  // 索引 isDeleted 字段
   @@index([isDisabled])                                 // 索引 isDisabled 字段
+}
+
+
+// =============================================
+// From menu_permission.prisma
+// =============================================
+model MenuPermission {
+  id           Int       @id @default(autoincrement())                        // 菜单-权限关联表唯一标识
+  menuId       Int                                                            // 菜单 ID
+  permissionId Int                                                            // 权限 ID
+  createdAt    DateTime  @default(now())                                      // 关联创建时间
+  updatedAt    DateTime  @updatedAt                                           // 关联更新时间
+
+  menu       Menu       @relation(fields: [menuId], references: [id])         // 菜单关联
+  permission Permission @relation(fields: [permissionId], references: [id])   // 权限关联
+
+  @@unique([menuId, permissionId])                                            // 复合唯一约束，防止重复关联
+  @@map("menu_permission") // 使用原始表名
 }
 
 
@@ -59,6 +78,7 @@ model Permission {
   updatedAt   DateTime   @updatedAt                     // 权限更新时间
   deletedAt   DateTime?                                 // 权限删除时间
   roles       RolePermission[]                          // 权限的角色关联关系
+  menus       MenuPermission[]                          // 权限的菜单关联关系
 
   @@index([isDeleted])                                  // 索引 isDeleted 字段
   @@index([isDisabled])                                 // 索引 isDisabled 字段
@@ -99,8 +119,8 @@ model RolePermission {
   role       Role       @relation(fields: [roleId], references: [id])         // 角色关联
   permission Permission @relation(fields: [permissionId], references: [id])   // 权限关联
 
-  @@unique([roleId, permissionId])
-  @@map("role_permission") // 使用原始表名// 复合唯一约束，防止重复关联
+  @@unique([roleId, permissionId]) // 复合唯一约束，防止重复关联
+  @@map("role_permission") // 使用原始表名
 }
 
 

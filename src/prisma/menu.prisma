@@ -10,6 +10,7 @@ model Menu {
   createdAt   DateTime   @default(now())                // 菜单创建时间
   updatedAt   DateTime   @updatedAt                     // 菜单更新时间
   deletedAt   DateTime?                                 // 菜单删除时间
+  permissions MenuPermission[]                          // 菜单的权限关联关系
 
   @@index([isDeleted])                                  // 索引 isDeleted 字段
   @@index([isDisabled])                                 // 索引 isDisabled 字段

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException  } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { Prisma, Menu } from '@prisma/client'
 
@@ -79,4 +79,57 @@ export class MenuService {
       data: { isDeleted: true, deletedAt: new Date() },
     })
   }
+
+  /**
+   * 绑定权限到菜单
+   * @param menuId 菜单 ID
+   * @param permissionIds 权限 ID 列表
+   * @returns 绑定结果
+   */
+  async assignPermissions(menuId: number, permissionIds: number[]) {
+    // 检查菜单是否存在
+    const menu = await this.prisma.menu.findUnique({ where: { id: menuId } })
+    if (!menu) throw new NotFoundException('Menu not found')
+
+    // 插入权限绑定关系
+    return this.prisma.menuPermission.createMany({
+      data: permissionIds.map((permissionId) => ({
+        menuId,
+        permissionId,
+      })),
+      skipDuplicates: true, // 防止重复绑定
+    })
+  }
+
+  /**
+   * 解绑菜单的权限
+   * @param menuId 菜单 ID
+   * @param permissionIds 权限 ID 列表
+   * @returns 删除结果
+   */
+  async unassignPermissions(menuId: number, permissionIds: number[]) {
+    return this.prisma.menuPermission.deleteMany({
+      where: {
+        menuId,
+        permissionId: { in: permissionIds },
+      },
+    })
+  }
+
+  /**
+   * 查询菜单的权限
+   * @param menuId 菜单 ID
+   * @returns 权限列表
+   */
+  async getMenuPermissions(menuId: number) {
+    // 检查菜单是否存在
+    const menu = await this.prisma.menu.findUnique({
+      where: { id: menuId },
+      include: { permissions: { include: { permission: true } } }, // 加载权限信息
+    })
+    if (!menu) throw new NotFoundException('Menu not found')
+
+    return menu.permissions.map((mp) => mp.permission)
+  }
+
 }

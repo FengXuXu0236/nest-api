@@ -37,4 +37,35 @@ export class MenuController {
   async remove(@Param('id') id: string) {
     return this.menuService.deleteMenu(+id)
   }
+
+  /**
+   * 绑定权限到菜单
+   */
+  @Post('permissions/:id')
+  async assignPermissions(
+    @Param('id') menuId: string,
+    @Body() body: { permissionIds: number[] },
+  ) {
+    return this.menuService.assignPermissions(+menuId, body.permissionIds)
+  }
+
+  /**
+   * 解绑菜单的权限
+   */
+  @Post('unassignPermissions/:id')
+  async unassignPermissions(
+    @Param('id') menuId: string,
+    @Body() body: { permissionIds: number[] },
+  ) {
+    return this.menuService.unassignPermissions(+menuId, body.permissionIds)
+  }
+
+  /**
+   * 查询菜单的权限
+   */
+  @Get('permissions/:id')
+  async getMenuPermissions(@Param('id') menuId: string) {
+    return this.menuService.getMenuPermissions(+menuId)
+  }
+
 }
