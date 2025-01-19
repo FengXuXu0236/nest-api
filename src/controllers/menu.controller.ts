@@ -1,6 +1,7 @@
-import { Controller, Post, Get, Patch, Delete, Body, Param } from '@nestjs/common'
+import { Controller, Post, Get, Patch, Delete, Body, Param, UseGuards  } from '@nestjs/common'
 import { MenuService } from '../service/menu.service'
 import { Prisma } from '@prisma/client'
+import { Roles } from '../decorators/roles.decorator'
 
 @Controller()
 export class MenuController {
@@ -45,6 +46,7 @@ export class MenuController {
   /**
    * 删除菜单
    */
+  @Roles('Admin')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.menuService.deleteMenu(+id)

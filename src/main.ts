@@ -5,7 +5,7 @@ import { ClassSerializerInterceptor } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { HttpExceptionFilter } from './filters/http-exception.filter'
 import { ResponseInterceptor } from './interceptors/response.interceptor'
-import { PermissionGuard } from './guards/permission.guard'
+import { RoleGuard } from './guards/role.guard'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -30,8 +30,9 @@ async function bootstrap() {
 
   // 全局权限守卫
   const reflector = app.get(Reflector)
-  app.useGlobalGuards(new PermissionGuard(reflector))
+  app.useGlobalGuards(new RoleGuard(reflector))
 
+  // 全局序列化拦截器
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
   await app.listen(3000)

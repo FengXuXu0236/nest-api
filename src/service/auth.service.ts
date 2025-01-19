@@ -15,25 +15,14 @@ export class AuthService {
 
   /**
    * 登录逻辑
-   * @param loginDto 登录参数
+   * @param loginDto 登录参数select
    * @returns JWT Token
    */
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto
 
     const user = await this.prisma.user.findUnique({
-      where: { email },
-      include: {
-        userRoles: {
-          include: {
-            role: {
-              include: {
-                permissions: { include: { permission: true } },
-              },
-            },
-          },
-        },
-      },
+      where: { email }
     })
     // 使用 UserService 查找用户
     // const user = await this.userService.findByEmail(email)
@@ -48,16 +37,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password')
     }
 
-    // 整理用户的权限列表
-    const permissions = new Set<string>()
-    user.userRoles.forEach((userRole) => {
-      userRole.role.permissions.forEach((rolePermission) => {
-        permissions.add(rolePermission.permission.name)
-      })
-    })
-
     // 生成 JWT
-    // const payload = { sub: user.id, email: user.email }
     const payload = { sub: user }
     const token = this.jwtService.sign(payload)
 

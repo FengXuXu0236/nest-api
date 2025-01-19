@@ -9,13 +9,13 @@ import { AuthGuard } from '@nestjs/passport'
 export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(context: ExecutionContext) {
     // 添加自定义逻辑 (可选)
-    console.log('JwtAuthGuard')
+    // console.log('JwtAuthGuard')
     return super.canActivate(context)
   }
 
   handleRequest(err, user) {
-    console.log('JWT Guard Error:', err) // 打印守卫错误
-    console.log('Decoded User:', user) // 打印解码后的用户信息
+    // console.log('JwtAuthGuard Error:', err) // 打印守卫错误
+    // console.log('JwtAuthGuard User:', user) // 打印解码后的用户信息
     if (err || !user) {
       throw new UnauthorizedException('Invalid or missing token')
     }

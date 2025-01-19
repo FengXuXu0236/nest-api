@@ -13,7 +13,7 @@ export interface User {
   password: string
   secretKey: string
   avatarUrl: string
-  role: string
+  roles: string
   isActive: boolean
   isDeleted: boolean
   isDisabled: boolean

@@ -9,7 +9,7 @@ import { Request } from 'express'
 import { User } from '../interfaces/user.interface'
 
 @Injectable()
-export class PermissionGuard implements CanActivate {
+export class PermissionGuardAA implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   /**
@@ -27,6 +27,8 @@ export class PermissionGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<Request>()
     const user = request.user as User
+    console.log('Authorization Header:', request.headers.authorization)
+    console.log('canActivate', user )
 
     if (!user) {
       throw new ForbiddenException('User not authenticated')

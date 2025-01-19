@@ -15,14 +15,14 @@ import { MenuModule } from './menu.module';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'defaultSecretKey', // JWT 密钥
-      signOptions: { expiresIn: '1h' }, // Token 过期时间
+      signOptions: { expiresIn: '10m' }, // Token 过期时间
     }),
     RoleModule,
     PermissionModule,
     MenuModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, PrismaService, JwtStrategy],
+  providers: [AuthService, UserService, JwtStrategy, PrismaService],
   exports: [AuthService], // 导出 AuthService 以便其他模块使用
 })
 export class AuthModule {}

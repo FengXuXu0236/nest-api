@@ -19,6 +19,10 @@ import { MenuService } from './service/menu.service';
     PrismaModule
   ],
   controllers: [RoleController, PermissionController, MenuController],
-  providers: [RoleService, PermissionService, MenuService],
+  providers: [
+    RoleService,
+    PermissionService,
+    MenuService,
+  ],
 })
 export class AppModule {}
